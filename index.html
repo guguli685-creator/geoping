@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>GeoPing · 节点地区与速度检测</title>
   <meta name="description" content="检测当前 IP 出口地区、系统环境与节点参考速度。" />
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="./favicon.png" />
+  <link rel="apple-touch-icon" href="./favicon.png" />
+  <meta name="theme-color" content="#eef3fb" />
 
   <style>
     :root {
@@ -14,42 +17,28 @@
       --text: #111827;
       --muted: #6b7280;
       --line: rgba(17, 24, 39, 0.08);
-
       --blue: #2563eb;
       --blue-soft: rgba(37, 99, 235, 0.1);
-
       --green-text: #047857;
       --green-soft: rgba(16, 185, 129, 0.12);
-
       --yellow-text: #92400e;
       --yellow-soft: rgba(245, 158, 11, 0.14);
-
-      --red: #ef4444;
       --red-text: #b91c1c;
       --red-soft: rgba(239, 68, 68, 0.13);
-
       --gray-text: #475569;
       --gray-soft: rgba(100, 116, 139, 0.12);
-
       --shadow: 0 24px 80px rgba(15, 23, 42, 0.08);
       --radius: 28px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
       min-height: 100vh;
-      font-family:
-        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
       color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
       background:
         radial-gradient(circle at 18% 10%, rgba(59, 130, 246, 0.14), transparent 32%),
         radial-gradient(circle at 82% 18%, rgba(16, 185, 129, 0.12), transparent 28%),
@@ -79,13 +68,7 @@
       backdrop-filter: blur(22px);
     }
 
-    .main,
-    .status-card,
-    .speed-panel,
-    .env-panel,
-    .advanced-panel {
-      padding: 28px;
-    }
+    .main, .status-card, .speed-panel, .env-panel, .advanced-panel { padding: 28px; }
 
     .tag {
       display: inline-flex;
@@ -124,12 +107,7 @@
       line-height: 1.8;
     }
 
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 30px;
-    }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
 
     button {
       appearance: none;
@@ -147,10 +125,7 @@
       white-space: nowrap;
     }
 
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.72;
-    }
+    button:disabled { cursor: not-allowed; opacity: 0.72; }
 
     .primary {
       color: #fff;
@@ -158,10 +133,7 @@
       box-shadow: 0 12px 28px rgba(17, 24, 39, 0.18);
     }
 
-    .primary:hover:not(:disabled) {
-      transform: translateY(-1px);
-      background: #020617;
-    }
+    .primary:hover:not(:disabled) { transform: translateY(-1px); background: #020617; }
 
     .status-card {
       display: flex;
@@ -170,26 +142,9 @@
       min-height: 320px;
     }
 
-    .status-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: flex-start;
-    }
-
-    .status-title,
-    .section-title {
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .status-text {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.8;
-    }
+    .status-top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+    .status-title, .section-title { color: var(--muted); font-size: 14px; font-weight: 700; }
+    .status-text { margin-top: 8px; color: var(--muted); font-size: 15px; line-height: 1.8; }
 
     .pill {
       height: 30px;
@@ -203,55 +158,16 @@
       background: var(--green-soft);
     }
 
-    .pill.idle {
-      color: var(--gray-text);
-      background: var(--gray-soft);
-    }
+    .pill.idle { color: var(--gray-text); background: var(--gray-soft); }
+    .pill.failed { color: var(--red-text); background: var(--red-soft); }
 
-    .pill.failed {
-      color: var(--red-text);
-      background: var(--red-soft);
-    }
+    .region { margin-top: 24px; }
+    .region-code { font-size: clamp(64px, 13vw, 118px); line-height: 0.9; letter-spacing: -0.08em; font-weight: 850; }
+    .region-name { margin-top: 10px; color: var(--muted); font-size: 16px; font-weight: 700; }
 
-    .region {
-      margin-top: 24px;
-    }
-
-    .region-code {
-      font-size: clamp(64px, 13vw, 118px);
-      line-height: 0.9;
-      letter-spacing: -0.08em;
-      font-weight: 850;
-    }
-
-    .region-name {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    .stack {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .score-row {
-      margin-top: 10px;
-      display: flex;
-      align-items: baseline;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .score {
-      font-size: clamp(42px, 8vw, 72px);
-      line-height: 0.95;
-      letter-spacing: -0.06em;
-      font-weight: 850;
-    }
+    .stack { display: grid; grid-template-columns: 1fr; gap: 18px; margin-top: 18px; }
+    .score-row { margin-top: 10px; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+    .score { font-size: clamp(42px, 8vw, 72px); line-height: 0.95; letter-spacing: -0.06em; font-weight: 850; }
 
     .score-label {
       height: 34px;
@@ -263,32 +179,12 @@
       font-weight: 850;
     }
 
-    .state-good {
-      color: var(--green-text);
-      background: var(--green-soft);
-    }
+    .state-good { color: var(--green-text); background: var(--green-soft); }
+    .state-mid { color: var(--yellow-text); background: var(--yellow-soft); }
+    .state-bad { color: var(--red-text); background: var(--red-soft); }
+    .state-unknown { color: var(--gray-text); background: var(--gray-soft); }
 
-    .state-mid {
-      color: var(--yellow-text);
-      background: var(--yellow-soft);
-    }
-
-    .state-bad {
-      color: var(--red-text);
-      background: var(--red-soft);
-    }
-
-    .state-unknown {
-      color: var(--gray-text);
-      background: var(--gray-soft);
-    }
-
-    .section-desc {
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.8;
-    }
+    .section-desc { margin-top: 12px; color: var(--muted); font-size: 14px; line-height: 1.8; }
 
     .meter {
       height: 10px;
@@ -299,20 +195,9 @@
       margin-top: 18px;
     }
 
-    .meter-bar {
-      height: 100%;
-      width: 0%;
-      border-radius: inherit;
-      background: #111827;
-      transition: width 0.35s ease;
-    }
+    .meter-bar { height: 100%; width: 0%; border-radius: inherit; background: #111827; transition: width 0.35s ease; }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-top: 18px;
-    }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 18px; }
 
     .item {
       min-width: 0;
@@ -324,39 +209,13 @@
       box-shadow: 0 12px 34px rgba(15, 23, 42, 0.035);
     }
 
-    .label {
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 750;
-    }
+    .label { color: var(--muted); font-size: 13px; font-weight: 750; }
+    .value { margin-top: 12px; font-size: clamp(14px, 1.8vw, 17px); font-weight: 850; line-height: 1.5; word-break: break-word; overflow-wrap: anywhere; white-space: normal; }
+    .wide { grid-column: span 2; }
+    .wide .value { font-size: 14px; font-weight: 750; line-height: 1.65; }
 
-    .value {
-      margin-top: 12px;
-      font-size: clamp(14px, 1.8vw, 17px);
-      font-weight: 850;
-      line-height: 1.5;
-      word-break: break-word;
-      overflow-wrap: anywhere;
-      white-space: normal;
-    }
-
-    .wide {
-      grid-column: span 2;
-    }
-
-    .wide .value {
-      font-size: 14px;
-      font-weight: 750;
-      line-height: 1.65;
-    }
-
-    .advanced-panel {
-      display: none;
-    }
-
-    .advanced-panel.show {
-      display: block;
-    }
+    .advanced-panel { display: none; }
+    .advanced-panel.show { display: block; }
 
     .note {
       margin-top: 18px;
@@ -374,52 +233,28 @@
       color: var(--muted);
       font-size: 13px;
       text-align: center;
+      line-height: 1.8;
     }
 
-    .error {
-      color: var(--red);
+    .footer a {
+      color: #111827;
+      font-weight: 800;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(17, 24, 39, 0.22);
     }
+
+    .footer a:hover { border-bottom-color: #111827; }
+    .error { color: #ef4444; }
 
     @media (max-width: 900px) {
-      .page {
-        width: min(100% - 24px, 720px);
-        padding: 18px 0 28px;
-      }
-
-      .hero,
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .main,
-      .status-card,
-      .speed-panel,
-      .env-panel,
-      .advanced-panel {
-        padding: 24px;
-      }
-
-      h1 {
-        margin-top: 20px;
-        font-size: clamp(56px, 18vw, 78px);
-      }
-
-      .desc {
-        font-size: 15px;
-        line-height: 1.85;
-      }
-
-      .actions {
-        flex-direction: column;
-      }
-
-      button {
-        width: 100%;
-      }
-
-      .wide {
-        grid-column: span 1;
-      }
+      .page { width: min(100% - 24px, 720px); padding: 18px 0 28px; }
+      .hero, .grid { grid-template-columns: 1fr; }
+      .main, .status-card, .speed-panel, .env-panel, .advanced-panel { padding: 24px; }
+      h1 { margin-top: 20px; font-size: clamp(56px, 18vw, 78px); }
+      .desc { font-size: 15px; line-height: 1.85; }
+      .actions { flex-direction: column; }
+      button { width: 100%; }
+      .wide { grid-column: span 1; }
     }
   </style>
 </head>
@@ -428,21 +263,10 @@
   <main class="page">
     <section class="hero">
       <div class="panel main">
-        <div class="tag">
-          <span class="dot"></span>
-          Region · Speed · Environment
-        </div>
-
+        <div class="tag"><span class="dot"></span>Region · Speed · Environment</div>
         <h1>GeoPing</h1>
-
-        <p class="desc">
-          检测当前 IP 出口地区、系统环境与节点参考速度。
-          测速使用 5 次延迟采样与 5MB × 2 轮下载测试。
-        </p>
-
-        <div class="actions">
-          <button id="detectBtn" class="primary" type="button" onclick="detectAll()">开始检测</button>
-        </div>
+        <p class="desc">检测当前 IP 出口地区、系统环境与节点参考速度。测速使用 5 次延迟采样与 5MB × 2 轮下载测试。</p>
+        <div class="actions"><button id="detectBtn" class="primary" type="button" onclick="detectAll()">开始检测</button></div>
       </div>
 
       <div class="panel status-card">
@@ -451,10 +275,8 @@
             <div class="status-title">当前出口地区</div>
             <div id="statusText" class="status-text">点击开始检测后获取当前出口地区</div>
           </div>
-
           <div id="statusPill" class="pill idle">Idle</div>
         </div>
-
         <div class="region">
           <div id="regionCodeBig" class="region-code">--</div>
           <div id="regionNameBig" class="region-name">等待开始</div>
@@ -465,205 +287,90 @@
     <section class="stack">
       <div class="panel speed-panel">
         <div class="section-title">节点速度</div>
-
         <div class="score-row">
           <div id="speedScore" class="score">--</div>
           <div id="speedLabel" class="score-label state-unknown">等待测速</div>
         </div>
-
-        <div id="speedDesc" class="section-desc">
-          点击开始检测后测试响应延迟与参考下载速度。
-        </div>
-
-        <div class="meter">
-          <div id="speedMeter" class="meter-bar"></div>
-        </div>
+        <div id="speedDesc" class="section-desc">点击开始检测后测试响应延迟与参考下载速度。</div>
+        <div class="meter"><div id="speedMeter" class="meter-bar"></div></div>
 
         <div class="grid">
-          <div class="item">
-            <div class="label">响应延迟</div>
-            <div id="latency" class="value">--</div>
-          </div>
-
-          <div class="item">
-            <div class="label">下载速度</div>
-            <div id="downloadSpeed" class="value">--</div>
-          </div>
-
-          <div class="item">
-            <div class="label">测速耗时</div>
-            <div id="testDuration" class="value">--</div>
-          </div>
-
-          <div class="item">
-            <div class="label">测试大小</div>
-            <div id="testSize" class="value">--</div>
-          </div>
-
-          <div class="item">
-            <div class="label">测速节点</div>
-            <div id="speedNode" class="value">--</div>
-          </div>
-
-          <div class="item wide">
-            <div class="label">测试方案</div>
-            <div id="testPlan" class="value">延迟 5 次取中位数，下载 5MB × 2 轮取平均</div>
-          </div>
+          <div class="item"><div class="label">响应延迟</div><div id="latency" class="value">--</div></div>
+          <div class="item"><div class="label">下载速度</div><div id="downloadSpeed" class="value">--</div></div>
+          <div class="item"><div class="label">测速耗时</div><div id="testDuration" class="value">--</div></div>
+          <div class="item"><div class="label">测试大小</div><div id="testSize" class="value">--</div></div>
+          <div class="item"><div class="label">测速节点</div><div id="speedNode" class="value">--</div></div>
+          <div class="item wide"><div class="label">测试方案</div><div id="testPlan" class="value">延迟 5 次取中位数，下载 5MB × 2 轮取平均</div></div>
         </div>
       </div>
 
       <div class="panel env-panel">
         <div class="section-title">基础环境</div>
-
         <div class="grid">
-          <div class="item">
-            <div class="label">IP 地址</div>
-            <div id="ip" class="value">等待检测</div>
-          </div>
-
-          <div class="item">
-            <div class="label">节点所在国家</div>
-            <div id="countryZh" class="value">等待检测</div>
-          </div>
-
-          <div class="item">
-            <div class="label">节点地区代码</div>
-            <div id="countryCode" class="value">等待检测</div>
-          </div>
-
-          <div class="item">
-            <div class="label">节点城市</div>
-            <div id="city" class="value">等待检测</div>
-          </div>
-
-          <div class="item">
-            <div class="label">浏览器语言</div>
-            <div id="language" class="value">--</div>
-          </div>
-
-          <div class="item">
-            <div class="label">系统时区</div>
-            <div id="systemTimezone" class="value">--</div>
-          </div>
-
-          <div class="item">
-            <div class="label">节点时区</div>
-            <div id="nodeTimezone" class="value">等待检测</div>
-          </div>
-
-          <div class="item">
-            <div class="label">地区一致性</div>
-            <div id="timezoneMatch" class="value">等待检测</div>
-          </div>
+          <div class="item"><div class="label">IP 地址</div><div id="ip" class="value">等待检测</div></div>
+          <div class="item"><div class="label">节点所在国家</div><div id="countryZh" class="value">等待检测</div></div>
+          <div class="item"><div class="label">节点地区代码</div><div id="countryCode" class="value">等待检测</div></div>
+          <div class="item"><div class="label">节点城市</div><div id="city" class="value">等待检测</div></div>
+          <div class="item"><div class="label">浏览器语言</div><div id="language" class="value">--</div></div>
+          <div class="item"><div class="label">系统时区</div><div id="systemTimezone" class="value">--</div></div>
+          <div class="item"><div class="label">节点时区</div><div id="nodeTimezone" class="value">等待检测</div></div>
+          <div class="item"><div class="label">地区一致性</div><div id="timezoneMatch" class="value">等待检测</div></div>
         </div>
       </div>
 
       <div id="advancedPanel" class="panel advanced-panel">
         <div class="section-title">可选高级信息</div>
-
         <div class="grid">
-          <div class="item">
-            <div class="label">ASN</div>
-            <div id="asn" class="value">--</div>
-          </div>
-
-          <div class="item wide">
-            <div class="label">运营商 / 组织</div>
-            <div id="org" class="value">--</div>
-          </div>
-
-          <div class="item">
-            <div class="label">ISP</div>
-            <div id="isp" class="value">--</div>
-          </div>
+          <div class="item"><div class="label">ASN</div><div id="asn" class="value">--</div></div>
+          <div class="item wide"><div class="label">运营商 / 组织</div><div id="org" class="value">--</div></div>
+          <div class="item"><div class="label">ISP</div><div id="isp" class="value">--</div></div>
         </div>
       </div>
     </section>
 
-    <div class="note">
-      GeoPing 只做轻量检测：当前公网出口地区、系统环境与参考速度。测速结果受浏览器、Cloudflare 节点、代理线路、移动网络策略影响，只适合做节点横向对比。
-    </div>
+    <div class="note">GeoPing 只做轻量检测：当前公网出口地区、系统环境与参考速度。测速结果受浏览器、Cloudflare 节点、代理线路、移动网络策略影响，只适合做节点横向对比。</div>
 
     <div class="footer">
-      GeoPing · Pure Frontend · GitHub Pages Ready
+      GeoPing · Pure Frontend · GitHub Pages Ready<br />
+      Source: <a href="https://github.com/guguli685-creator/geoping" target="_blank" rel="noopener noreferrer">github.com/guguli685-creator/geoping</a>
     </div>
   </main>
 
   <script>
     const $ = (id) => document.getElementById(id);
-
     const EMPTY = "未获取";
+    const SPEED_CONFIG = { latencySamples: 5, downloadBytes: 5 * 1024 * 1024, downloadRounds: 2, latencyTimeoutMs: 5000, downloadTimeoutMs: 18000 };
 
-    const SPEED_CONFIG = {
-      latencySamples: 5,
-      downloadBytes: 5 * 1024 * 1024,
-      downloadRounds: 2,
-      latencyTimeoutMs: 5000,
-      downloadTimeoutMs: 18000
-    };
-
-    function initPage() {
-      setIdle();
-      setBasicInfo();
-      setSpeedIdle();
-    }
-
-    function setBasicInfo() {
-      $("language").textContent = navigator.language || EMPTY;
-      $("systemTimezone").textContent =
-        Intl.DateTimeFormat().resolvedOptions().timeZone || EMPTY;
-    }
-
-    function setIdle() {
-      $("statusText").textContent = "点击开始检测后获取当前出口地区";
-      $("statusText").classList.remove("error");
-      $("statusPill").textContent = "Idle";
-      $("statusPill").className = "pill idle";
-
-      $("regionCodeBig").textContent = "--";
-      $("regionNameBig").textContent = "等待开始";
-    }
+    function initPage() { setIdle(); setBasicInfo(); setSpeedIdle(); }
+    function setBasicInfo() { $("language").textContent = navigator.language || EMPTY; $("systemTimezone").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || EMPTY; }
+    function setIdle() { $("statusText").textContent = "点击开始检测后获取当前出口地区"; $("statusText").classList.remove("error"); $("statusPill").textContent = "Idle"; $("statusPill").className = "pill idle"; $("regionCodeBig").textContent = "--"; $("regionNameBig").textContent = "等待开始"; }
 
     function setLoading() {
       $("statusText").textContent = "正在检测出口地区与速度...";
       $("statusText").classList.remove("error");
       $("statusPill").textContent = "Checking";
       $("statusPill").className = "pill";
-
       $("regionCodeBig").textContent = "--";
       $("regionNameBig").textContent = "检测中";
-
-      const ids = [
-        "ip", "countryZh", "countryCode", "city",
-        "nodeTimezone", "timezoneMatch"
-      ];
-
-      ids.forEach((id) => {
-        $(id).textContent = "检测中";
-      });
-
+      ["ip", "countryZh", "countryCode", "city", "nodeTimezone", "timezoneMatch"].forEach((id) => { $(id).textContent = "检测中"; });
       $("advancedPanel").classList.remove("show");
     }
 
     function setResult(data) {
       const code = String(data.country || "").toUpperCase();
       const countryZh = code ? getCountryNameZh(code) : EMPTY;
-
       $("statusText").textContent = "检测完成";
       $("statusText").classList.remove("error");
       $("statusPill").textContent = "Ready";
       $("statusPill").className = "pill";
-
       $("regionCodeBig").textContent = code || "--";
       $("regionNameBig").textContent = code ? `${countryZh} · ${code}` : EMPTY;
-
       $("ip").textContent = data.ip || EMPTY;
       $("countryZh").textContent = countryZh;
       $("countryCode").textContent = code || EMPTY;
       $("city").textContent = data.city || EMPTY;
       $("nodeTimezone").textContent = data.nodeTimezone || EMPTY;
       $("timezoneMatch").textContent = getTimezoneMatchText(data.nodeTimezone);
-
       showAdvancedIfAvailable(data);
     }
 
@@ -672,28 +379,14 @@
       $("statusText").classList.add("error");
       $("statusPill").textContent = "Failed";
       $("statusPill").className = "pill failed";
-
       $("regionCodeBig").textContent = "--";
       $("regionNameBig").textContent = "无法获取地区";
-
-      $("ip").textContent = EMPTY;
-      $("countryZh").textContent = EMPTY;
-      $("countryCode").textContent = EMPTY;
-      $("city").textContent = EMPTY;
-      $("nodeTimezone").textContent = EMPTY;
-      $("timezoneMatch").textContent = EMPTY;
+      ["ip", "countryZh", "countryCode", "city", "nodeTimezone", "timezoneMatch"].forEach((id) => { $(id).textContent = EMPTY; });
     }
 
     function showAdvancedIfAvailable(data) {
-      const hasAsn = Boolean(data.asn);
-      const hasOrg = Boolean(data.org);
-      const hasIsp = Boolean(data.isp);
-
-      if (!hasAsn && !hasOrg && !hasIsp) {
-        $("advancedPanel").classList.remove("show");
-        return;
-      }
-
+      const hasAsn = Boolean(data.asn), hasOrg = Boolean(data.org), hasIsp = Boolean(data.isp);
+      if (!hasAsn && !hasOrg && !hasIsp) { $("advancedPanel").classList.remove("show"); return; }
       $("advancedPanel").classList.add("show");
       $("asn").textContent = data.asn || EMPTY;
       $("org").textContent = data.org || EMPTY;
@@ -701,79 +394,28 @@
     }
 
     function getCountryNameZh(code) {
-      try {
-        const displayNames = new Intl.DisplayNames(["zh-CN"], {
-          type: "region"
-        });
-
-        return displayNames.of(code) || code;
-      } catch (error) {
-        const fallback = {
-          US: "美国",
-          JP: "日本",
-          HK: "中国香港",
-          TW: "中国台湾",
-          SG: "新加坡",
-          KR: "韩国",
-          CN: "中国",
-          MO: "中国澳门",
-          GB: "英国",
-          DE: "德国",
-          FR: "法国",
-          CA: "加拿大",
-          AU: "澳大利亚",
-          MY: "马来西亚",
-          TH: "泰国",
-          VN: "越南",
-          PH: "菲律宾",
-          ID: "印度尼西亚",
-          IN: "印度",
-          RU: "俄罗斯"
-        };
-
-        return fallback[code] || code;
-      }
+      try { return new Intl.DisplayNames(["zh-CN"], { type: "region" }).of(code) || code; }
+      catch { return { US: "美国", JP: "日本", HK: "中国香港", TW: "中国台湾", SG: "新加坡", KR: "韩国", CN: "中国", MO: "中国澳门", GB: "英国", DE: "德国", FR: "法国", CA: "加拿大", AU: "澳大利亚", MY: "马来西亚", TH: "泰国", VN: "越南", PH: "菲律宾", ID: "印度尼西亚", IN: "印度", RU: "俄罗斯" }[code] || code; }
     }
 
     function getTimezoneMatchText(nodeTimezone) {
-      const systemTimezone =
-        Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-
-      if (!nodeTimezone || !systemTimezone) {
-        return EMPTY;
-      }
-
-      if (nodeTimezone === systemTimezone) {
-        return "时区完全一致";
-      }
-
-      const systemArea = systemTimezone.split("/")[0];
-      const nodeArea = nodeTimezone.split("/")[0];
-
-      if (systemArea === nodeArea) {
-        return "时区区域接近";
-      }
-
-      return "时区不一致";
+      const systemTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+      if (!nodeTimezone || !systemTimezone) return EMPTY;
+      if (nodeTimezone === systemTimezone) return "时区完全一致";
+      return systemTimezone.split("/")[0] === nodeTimezone.split("/")[0] ? "时区区域接近" : "时区不一致";
     }
 
     function parseAsn(value) {
       if (!value) return "";
-
       const text = String(value);
       const match = text.match(/AS\s?(\d+)/i);
-
-      if (match) {
-        return `AS${match[1]}`;
-      }
-
+      if (match) return `AS${match[1]}`;
       const digits = text.replace(/[^\d]/g, "");
       return digits ? `AS${digits}` : "";
     }
 
     function mergeData(base, next) {
       if (!next) return base;
-
       base.ip = base.ip || next.ip || "";
       base.country = base.country || next.country || "";
       base.city = base.city || next.city || "";
@@ -781,228 +423,86 @@
       base.asn = base.asn || next.asn || "";
       base.org = base.org || next.org || "";
       base.isp = base.isp || next.isp || "";
-
       return base;
     }
 
     async function requestJson(url) {
-      const response = await fetch(url, {
-        method: "GET",
-        cache: "no-store"
-      });
-
-      if (!response.ok) {
-        throw new Error("Request failed");
-      }
-
+      const response = await fetch(url, { method: "GET", cache: "no-store" });
+      if (!response.ok) throw new Error("Request failed");
       return response.json();
     }
 
     async function getRegionData() {
-      const data = {
-        ip: "",
-        country: "",
-        city: "",
-        nodeTimezone: "",
-        asn: "",
-        org: "",
-        isp: ""
-      };
-
+      const data = { ip: "", country: "", city: "", nodeTimezone: "", asn: "", org: "", isp: "" };
       const tasks = [
-        async () => {
-          const res = await requestJson(`https://api.country.is/?_=${Date.now()}`);
-          return {
-            ip: res.ip || "",
-            country: String(res.country || "").toUpperCase()
-          };
-        },
-
-        async () => {
-          const res = await requestJson(`https://ipapi.co/json/?_=${Date.now()}`);
-          return {
-            ip: res.ip || "",
-            country: String(res.country_code || "").toUpperCase(),
-            city: res.city || "",
-            nodeTimezone: res.timezone || "",
-            asn: parseAsn(res.asn || ""),
-            org: res.org || "",
-            isp: ""
-          };
-        },
-
-        async () => {
-          const res = await requestJson(`https://ipwho.is/?_=${Date.now()}`);
-
-          if (res.success === false) {
-            throw new Error("ipwho failed");
-          }
-
-          const connection = res.connection || {};
-          const timezone = res.timezone || {};
-
-          return {
-            ip: res.ip || "",
-            country: String(res.country_code || "").toUpperCase(),
-            city: res.city || "",
-            nodeTimezone: timezone.id || "",
-            asn: parseAsn(connection.asn || ""),
-            org: connection.org || "",
-            isp: connection.isp || ""
-          };
-        }
+        async () => { const res = await requestJson(`https://api.country.is/?_=${Date.now()}`); return { ip: res.ip || "", country: String(res.country || "").toUpperCase() }; },
+        async () => { const res = await requestJson(`https://ipapi.co/json/?_=${Date.now()}`); return { ip: res.ip || "", country: String(res.country_code || "").toUpperCase(), city: res.city || "", nodeTimezone: res.timezone || "", asn: parseAsn(res.asn || ""), org: res.org || "", isp: "" }; },
+        async () => { const res = await requestJson(`https://ipwho.is/?_=${Date.now()}`); if (res.success === false) throw new Error("ipwho failed"); const connection = res.connection || {}; const timezone = res.timezone || {}; return { ip: res.ip || "", country: String(res.country_code || "").toUpperCase(), city: res.city || "", nodeTimezone: timezone.id || "", asn: parseAsn(connection.asn || ""), org: connection.org || "", isp: connection.isp || "" }; }
       ];
-
       const results = await Promise.allSettled(tasks.map((task) => task()));
-
-      results.forEach((item) => {
-        if (item.status === "fulfilled") {
-          mergeData(data, item.value);
-        }
-      });
-
-      if (!data.ip && !data.country) {
-        throw new Error("No region data");
-      }
-
+      results.forEach((item) => { if (item.status === "fulfilled") mergeData(data, item.value); });
+      if (!data.ip && !data.country) throw new Error("No region data");
       return data;
     }
 
     function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), timeoutMs);
-
-      return fetch(url, {
-        ...options,
-        signal: controller.signal
-      }).finally(() => clearTimeout(timer));
+      return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
     }
 
     function median(values) {
       if (!values.length) return null;
-
       const sorted = [...values].sort((a, b) => a - b);
       const mid = Math.floor(sorted.length / 2);
-
-      if (sorted.length % 2 === 0) {
-        return (sorted[mid - 1] + sorted[mid]) / 2;
-      }
-
-      return sorted[mid];
+      return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
     }
 
     async function measureLatency() {
       const targets = [
-        {
-          url: "https://www.gstatic.com/generate_204",
-          mode: "no-cors"
-        },
-        {
-          url: "https://api.country.is/",
-          mode: "cors"
-        },
-        {
-          url: "https://ipapi.co/json/",
-          mode: "cors"
-        }
+        { url: "https://www.gstatic.com/generate_204", mode: "no-cors" },
+        { url: "https://api.country.is/", mode: "cors" },
+        { url: "https://ipapi.co/json/", mode: "cors" }
       ];
-
       const samples = [];
-
       for (let i = 0; i < SPEED_CONFIG.latencySamples; i += 1) {
         const target = targets[i % targets.length];
-
         try {
           const start = performance.now();
-
-          await fetchWithTimeout(`${target.url}?_=${Date.now()}_${Math.random()}`, {
-            method: "GET",
-            cache: "no-store",
-            mode: target.mode
-          }, SPEED_CONFIG.latencyTimeoutMs);
-
-          const end = performance.now();
-          samples.push(end - start);
-        } catch (error) {
-          continue;
-        }
+          await fetchWithTimeout(`${target.url}?_=${Date.now()}_${Math.random()}`, { method: "GET", cache: "no-store", mode: target.mode }, SPEED_CONFIG.latencyTimeoutMs);
+          samples.push(performance.now() - start);
+        } catch { }
       }
-
       const value = median(samples);
-
-      if (value === null) {
-        return null;
-      }
-
-      return {
-        medianMs: Math.round(value),
-        samples: samples.map((item) => Math.round(item))
-      };
+      return value === null ? null : { medianMs: Math.round(value), samples: samples.map((item) => Math.round(item)) };
     }
 
     async function measureDownload() {
       const rounds = [];
       let totalBytes = 0;
       let totalSeconds = 0;
-
       for (let i = 0; i < SPEED_CONFIG.downloadRounds; i += 1) {
         const url = `https://speed.cloudflare.com/__down?bytes=${SPEED_CONFIG.downloadBytes}&_=${Date.now()}_${Math.random()}_${i}`;
         const start = performance.now();
-
-        const response = await fetchWithTimeout(url, {
-          method: "GET",
-          cache: "no-store"
-        }, SPEED_CONFIG.downloadTimeoutMs);
-
-        if (!response.ok) {
-          throw new Error("Speed download failed");
-        }
-
+        const response = await fetchWithTimeout(url, { method: "GET", cache: "no-store" }, SPEED_CONFIG.downloadTimeoutMs);
+        if (!response.ok) throw new Error("Speed download failed");
         const blob = await response.blob();
-        const end = performance.now();
-
+        const seconds = Math.max((performance.now() - start) / 1000, 0.001);
         const size = blob.size || SPEED_CONFIG.downloadBytes;
-        const seconds = Math.max((end - start) / 1000, 0.001);
         const mbps = (size * 8) / seconds / 1000 / 1000;
-
         totalBytes += size;
         totalSeconds += seconds;
-
-        rounds.push({
-          bytes: size,
-          seconds,
-          mbps
-        });
+        rounds.push({ bytes: size, seconds, mbps });
       }
-
-      const averageMbps =
-        rounds.reduce((sum, item) => sum + item.mbps, 0) / rounds.length;
-
-      return {
-        rounds,
-        averageMbps,
-        totalBytes,
-        totalSeconds
-      };
+      return { rounds, averageMbps: rounds.reduce((sum, item) => sum + item.mbps, 0) / rounds.length, totalBytes, totalSeconds };
     }
 
     async function runSpeedTest() {
       const totalStart = performance.now();
-
       const latency = await measureLatency().catch(() => null);
       const download = await measureDownload().catch(() => null);
-
-      const totalEnd = performance.now();
-
-      if (latency === null && !download) {
-        throw new Error("Speed test failed");
-      }
-
-      return {
-        latency,
-        download,
-        durationSeconds: Math.max((totalEnd - totalStart) / 1000, 0.001)
-      };
+      if (latency === null && !download) throw new Error("Speed test failed");
+      return { latency, download, durationSeconds: Math.max((performance.now() - totalStart) / 1000, 0.001) };
     }
 
     function setSpeedIdle() {
@@ -1011,7 +511,6 @@
       $("speedLabel").className = "score-label state-unknown";
       $("speedDesc").textContent = "点击开始检测后测试响应延迟与参考下载速度。";
       $("speedMeter").style.width = "0%";
-
       $("latency").textContent = "--";
       $("downloadSpeed").textContent = "--";
       $("testDuration").textContent = "--";
@@ -1026,7 +525,6 @@
       $("speedLabel").className = "score-label state-unknown";
       $("speedDesc").textContent = "正在执行 5 次延迟采样与 2 轮下载测试。";
       $("speedMeter").style.width = "18%";
-
       $("latency").textContent = "--";
       $("downloadSpeed").textContent = "--";
       $("testDuration").textContent = "测试中";
@@ -1036,86 +534,34 @@
     }
 
     function updateSpeed(result) {
-      const latency = result.latency;
-      const download = result.download;
-
-      const latencyMs = latency ? latency.medianMs : null;
-      const mbps = download ? download.averageMbps : null;
-
+      const latencyMs = result.latency ? result.latency.medianMs : null;
+      const mbps = result.download ? result.download.averageMbps : null;
       let score = 100;
       const reasons = [];
-
-      if (latencyMs === null) {
-        score -= 20;
-        reasons.push("响应延迟测试失败");
-      } else if (latencyMs > 350) {
-        score -= 40;
-        reasons.push("响应延迟较高");
-      } else if (latencyMs > 180) {
-        score -= 24;
-        reasons.push("响应延迟中等");
-      } else if (latencyMs > 90) {
-        score -= 10;
-        reasons.push("响应延迟略高");
-      }
-
-      if (mbps === null) {
-        score -= 28;
-        reasons.push("下载测速失败");
-      } else if (mbps < 2) {
-        score -= 48;
-        reasons.push("下载速度较慢");
-      } else if (mbps < 8) {
-        score -= 28;
-        reasons.push("下载速度中等");
-      } else if (mbps < 20) {
-        score -= 12;
-        reasons.push("下载速度尚可");
-      }
-
+      if (latencyMs === null) { score -= 20; reasons.push("响应延迟测试失败"); }
+      else if (latencyMs > 350) { score -= 40; reasons.push("响应延迟较高"); }
+      else if (latencyMs > 180) { score -= 24; reasons.push("响应延迟中等"); }
+      else if (latencyMs > 90) { score -= 10; reasons.push("响应延迟略高"); }
+      if (mbps === null) { score -= 28; reasons.push("下载测速失败"); }
+      else if (mbps < 2) { score -= 48; reasons.push("下载速度较慢"); }
+      else if (mbps < 8) { score -= 28; reasons.push("下载速度中等"); }
+      else if (mbps < 20) { score -= 12; reasons.push("下载速度尚可"); }
       score = Math.max(0, Math.min(100, Math.round(score)));
-
-      let label = "速度较好";
-      let cls = "state-good";
-      let desc = "响应延迟与参考下载速度表现较好。";
-
-      if (score < 45) {
-        label = "速度较慢";
-        cls = "state-bad";
-        desc = "当前节点速度表现较弱。";
-      } else if (score < 75) {
-        label = "速度中等";
-        cls = "state-mid";
-        desc = "当前节点速度可用，但存在延迟或下载速度限制。";
-      }
-
+      let label = "速度较好", cls = "state-good", desc = "响应延迟与参考下载速度表现较好。";
+      if (score < 45) { label = "速度较慢"; cls = "state-bad"; desc = "当前节点速度表现较弱。"; }
+      else if (score < 75) { label = "速度中等"; cls = "state-mid"; desc = "当前节点速度可用，但存在延迟或下载速度限制。"; }
       $("speedScore").textContent = `${score}`;
       $("speedLabel").textContent = label;
       $("speedLabel").className = `score-label ${cls}`;
       $("speedDesc").textContent = reasons.length ? reasons.join("；") : desc;
       $("speedMeter").style.width = `${score}%`;
-
-      $("latency").textContent =
-        latencyMs === null ? EMPTY : `${latencyMs} ms`;
-
-      $("downloadSpeed").textContent =
-        mbps === null ? EMPTY : `${mbps.toFixed(2)} Mbps`;
-
-      $("testDuration").textContent =
-        `${result.durationSeconds.toFixed(1)} 秒`;
-
-      $("testSize").textContent =
-        download ? `${formatBytes(download.totalBytes)} 总量` : EMPTY;
-
+      $("latency").textContent = latencyMs === null ? EMPTY : `${latencyMs} ms`;
+      $("downloadSpeed").textContent = mbps === null ? EMPTY : `${mbps.toFixed(2)} Mbps`;
+      $("testDuration").textContent = `${result.durationSeconds.toFixed(1)} 秒`;
+      $("testSize").textContent = result.download ? `${formatBytes(result.download.totalBytes)} 总量` : EMPTY;
       $("speedNode").textContent = "Cloudflare Speed";
-
-      const latencySamples =
-        latency && latency.samples.length
-          ? `延迟样本：${latency.samples.join(" / ")} ms`
-          : "延迟样本：未获取";
-
-      $("testPlan").textContent =
-        `${latencySamples}；下载 ${formatBytes(SPEED_CONFIG.downloadBytes)} × ${SPEED_CONFIG.downloadRounds} 轮取平均`;
+      const latencySamples = result.latency && result.latency.samples.length ? `延迟样本：${result.latency.samples.join(" / ")} ms` : "延迟样本：未获取";
+      $("testPlan").textContent = `${latencySamples}；下载 ${formatBytes(SPEED_CONFIG.downloadBytes)} × ${SPEED_CONFIG.downloadRounds} 轮取平均`;
     }
 
     function setSpeedError() {
@@ -1124,50 +570,29 @@
       $("speedLabel").className = "score-label state-unknown";
       $("speedDesc").textContent = "测速接口不可用，或被浏览器、网络策略拦截。";
       $("speedMeter").style.width = "0%";
-
-      $("latency").textContent = EMPTY;
-      $("downloadSpeed").textContent = EMPTY;
-      $("testDuration").textContent = EMPTY;
-      $("testSize").textContent = EMPTY;
-      $("speedNode").textContent = EMPTY;
+      ["latency", "downloadSpeed", "testDuration", "testSize", "speedNode"].forEach((id) => { $(id).textContent = EMPTY; });
       $("testPlan").textContent = "测速失败";
     }
 
     function formatBytes(bytes) {
       if (!bytes || bytes <= 0) return "--";
-
       const units = ["B", "KB", "MB", "GB"];
-      let size = bytes;
-      let index = 0;
-
-      while (size >= 1024 && index < units.length - 1) {
-        size /= 1024;
-        index += 1;
-      }
-
+      let size = bytes, index = 0;
+      while (size >= 1024 && index < units.length - 1) { size /= 1024; index += 1; }
       return `${size.toFixed(index === 0 ? 0 : 2)} ${units[index]}`;
     }
 
     async function detectAll() {
       const btn = $("detectBtn");
-
       btn.disabled = true;
       btn.textContent = "检测中...";
-
       setBasicInfo();
       setLoading();
       setSpeedLoading();
-
-      const regionPromise = getRegionData()
-        .then(setResult)
-        .catch(setError);
-
-      const speedPromise = runSpeedTest()
-        .then(updateSpeed)
-        .catch(setSpeedError);
-
-      await Promise.allSettled([regionPromise, speedPromise]);
-
+      await Promise.allSettled([
+        getRegionData().then(setResult).catch(setError),
+        runSpeedTest().then(updateSpeed).catch(setSpeedError)
+      ]);
       btn.disabled = false;
       btn.textContent = "重新检测";
     }
