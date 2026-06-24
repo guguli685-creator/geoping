@@ -45,18 +45,8 @@
         linear-gradient(180deg, #fbfcff 0%, var(--bg) 100%);
     }
 
-    .page {
-      width: min(1080px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 46px 0 38px;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 24px;
-      align-items: stretch;
-    }
+    .page { width: min(1080px, calc(100% - 32px)); margin: 0 auto; padding: 46px 0 38px; }
+    .hero { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 24px; align-items: stretch; }
 
     .panel {
       position: relative;
@@ -68,7 +58,7 @@
       backdrop-filter: blur(22px);
     }
 
-    .main, .status-card, .speed-panel, .env-panel, .advanced-panel { padding: 28px; }
+    .main, .status-card, .speed-panel, .env-panel, .webrtc-panel, .advanced-panel { padding: 28px; }
 
     .tag {
       display: inline-flex;
@@ -84,29 +74,10 @@
       letter-spacing: 0.2px;
     }
 
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--blue);
-      box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.12);
-    }
+    .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--blue); box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.12); }
 
-    h1 {
-      margin: 24px 0 12px;
-      font-size: clamp(48px, 8vw, 84px);
-      line-height: 0.94;
-      letter-spacing: -0.07em;
-    }
-
-    .desc {
-      margin: 0;
-      max-width: 620px;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.8;
-    }
-
+    h1 { margin: 24px 0 12px; font-size: clamp(48px, 8vw, 84px); line-height: 0.94; letter-spacing: -0.07em; }
+    .desc { margin: 0; max-width: 620px; color: var(--muted); font-size: 16px; line-height: 1.8; }
     .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
 
     button {
@@ -126,22 +97,12 @@
     }
 
     button:disabled { cursor: not-allowed; opacity: 0.72; }
-
-    .primary {
-      color: #fff;
-      background: #111827;
-      box-shadow: 0 12px 28px rgba(17, 24, 39, 0.18);
-    }
-
+    .primary { color: #fff; background: #111827; box-shadow: 0 12px 28px rgba(17, 24, 39, 0.18); }
     .primary:hover:not(:disabled) { transform: translateY(-1px); background: #020617; }
+    .secondary { color: #111827; background: rgba(255, 255, 255, 0.78); border: 1px solid var(--line); box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04); }
+    .secondary:hover:not(:disabled) { transform: translateY(-1px); background: #fff; }
 
-    .status-card {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 320px;
-    }
-
+    .status-card { display: flex; flex-direction: column; justify-content: space-between; min-height: 320px; }
     .status-top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
     .status-title, .section-title { color: var(--muted); font-size: 14px; font-weight: 700; }
     .status-text { margin-top: 8px; color: var(--muted); font-size: 15px; line-height: 1.8; }
@@ -185,16 +146,7 @@
     .state-unknown { color: var(--gray-text); background: var(--gray-soft); }
 
     .section-desc { margin-top: 12px; color: var(--muted); font-size: 14px; line-height: 1.8; }
-
-    .meter {
-      height: 10px;
-      width: 100%;
-      border-radius: 999px;
-      overflow: hidden;
-      background: rgba(100, 116, 139, 0.14);
-      margin-top: 18px;
-    }
-
+    .meter { height: 10px; width: 100%; border-radius: 999px; overflow: hidden; background: rgba(100, 116, 139, 0.14); margin-top: 18px; }
     .meter-bar { height: 100%; width: 0%; border-radius: inherit; background: #111827; transition: width 0.35s ease; }
 
     .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 18px; }
@@ -213,48 +165,27 @@
     .value { margin-top: 12px; font-size: clamp(14px, 1.8vw, 17px); font-weight: 850; line-height: 1.5; word-break: break-word; overflow-wrap: anywhere; white-space: normal; }
     .wide { grid-column: span 2; }
     .wide .value { font-size: 14px; font-weight: 750; line-height: 1.65; }
+    .full { grid-column: 1 / -1; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 13px; font-weight: 700; color: #334155; }
 
     .advanced-panel { display: none; }
     .advanced-panel.show { display: block; }
 
-    .note {
-      margin-top: 18px;
-      padding: 18px 20px;
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.58);
-      border: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .footer {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-      line-height: 1.8;
-    }
-
-    .footer a {
-      color: #111827;
-      font-weight: 800;
-      text-decoration: none;
-      border-bottom: 1px solid rgba(17, 24, 39, 0.22);
-    }
-
+    .note { margin-top: 18px; padding: 18px 20px; border-radius: 22px; background: rgba(255, 255, 255, 0.58); border: 1px solid var(--line); color: var(--muted); font-size: 14px; line-height: 1.8; }
+    .footer { margin-top: 18px; color: var(--muted); font-size: 13px; text-align: center; line-height: 1.8; }
+    .footer a { color: #111827; font-weight: 800; text-decoration: none; border-bottom: 1px solid rgba(17, 24, 39, 0.22); }
     .footer a:hover { border-bottom-color: #111827; }
     .error { color: #ef4444; }
 
     @media (max-width: 900px) {
       .page { width: min(100% - 24px, 720px); padding: 18px 0 28px; }
       .hero, .grid { grid-template-columns: 1fr; }
-      .main, .status-card, .speed-panel, .env-panel, .advanced-panel { padding: 24px; }
+      .main, .status-card, .speed-panel, .env-panel, .webrtc-panel, .advanced-panel { padding: 24px; }
       h1 { margin-top: 20px; font-size: clamp(56px, 18vw, 78px); }
       .desc { font-size: 15px; line-height: 1.85; }
       .actions { flex-direction: column; }
       button { width: 100%; }
-      .wide { grid-column: span 1; }
+      .wide, .full { grid-column: span 1; }
     }
   </style>
 </head>
@@ -318,6 +249,18 @@
         </div>
       </div>
 
+      <div class="panel webrtc-panel">
+        <div class="section-title">WebRTC 检测</div>
+        <div id="webrtcDesc" class="section-desc">辅助检测浏览器 WebRTC 是否暴露本地网络候选信息。此检测不会自动运行，需要手动点击。</div>
+        <div class="actions"><button id="webrtcBtn" class="secondary" type="button" onclick="runWebRTCCheck()">检测 WebRTC</button></div>
+        <div class="grid">
+          <div class="item"><div class="label">WebRTC 状态</div><div id="webrtcStatus" class="value">等待检测</div></div>
+          <div class="item"><div class="label">候选数量</div><div id="webrtcCount" class="value">--</div></div>
+          <div class="item wide"><div class="label">泄露判断</div><div id="webrtcLeak" class="value">等待检测</div></div>
+          <div class="item full"><div class="label">候选信息</div><div id="webrtcCandidates" class="value mono">等待检测</div></div>
+        </div>
+      </div>
+
       <div id="advancedPanel" class="panel advanced-panel">
         <div class="section-title">可选高级信息</div>
         <div class="grid">
@@ -328,7 +271,7 @@
       </div>
     </section>
 
-    <div class="note">GeoPing 只做轻量检测：当前公网出口地区、系统环境与参考速度。测速结果受浏览器、Cloudflare 节点、代理线路、移动网络策略影响，只适合做节点横向对比。</div>
+    <div class="note">GeoPing 只做轻量检测：当前公网出口地区、系统环境、WebRTC 候选信息与参考速度。测速结果受浏览器、Cloudflare 节点、代理线路、移动网络策略影响，只适合做节点横向对比。</div>
 
     <div class="footer">
       GeoPing · Pure Frontend · GitHub Pages Ready<br />
@@ -340,8 +283,9 @@
     const $ = (id) => document.getElementById(id);
     const EMPTY = "未获取";
     const SPEED_CONFIG = { latencySamples: 5, downloadBytes: 5 * 1024 * 1024, downloadRounds: 2, latencyTimeoutMs: 5000, downloadTimeoutMs: 18000 };
+    let currentRegionData = null;
 
-    function initPage() { setIdle(); setBasicInfo(); setSpeedIdle(); }
+    function initPage() { setIdle(); setBasicInfo(); setSpeedIdle(); setWebRTCIdle(); }
     function setBasicInfo() { $("language").textContent = navigator.language || EMPTY; $("systemTimezone").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || EMPTY; }
     function setIdle() { $("statusText").textContent = "点击开始检测后获取当前出口地区"; $("statusText").classList.remove("error"); $("statusPill").textContent = "Idle"; $("statusPill").className = "pill idle"; $("regionCodeBig").textContent = "--"; $("regionNameBig").textContent = "等待开始"; }
 
@@ -357,6 +301,7 @@
     }
 
     function setResult(data) {
+      currentRegionData = data;
       const code = String(data.country || "").toUpperCase();
       const countryZh = code ? getCountryNameZh(code) : EMPTY;
       $("statusText").textContent = "检测完成";
@@ -375,6 +320,7 @@
     }
 
     function setError() {
+      currentRegionData = null;
       $("statusText").textContent = "检测失败，请检查网络或稍后重试";
       $("statusText").classList.add("error");
       $("statusPill").textContent = "Failed";
@@ -580,6 +526,123 @@
       let size = bytes, index = 0;
       while (size >= 1024 && index < units.length - 1) { size /= 1024; index += 1; }
       return `${size.toFixed(index === 0 ? 0 : 2)} ${units[index]}`;
+    }
+
+    function setWebRTCIdle() {
+      $("webrtcStatus").textContent = "等待检测";
+      $("webrtcCount").textContent = "--";
+      $("webrtcLeak").textContent = "等待检测";
+      $("webrtcCandidates").textContent = "等待检测";
+      $("webrtcDesc").textContent = "辅助检测浏览器 WebRTC 是否暴露本地网络候选信息。此检测不会自动运行，需要手动点击。";
+    }
+
+    function setWebRTCLoading() {
+      $("webrtcStatus").textContent = "检测中";
+      $("webrtcCount").textContent = "--";
+      $("webrtcLeak").textContent = "分析中";
+      $("webrtcCandidates").textContent = "正在收集 ICE 候选地址...";
+      $("webrtcDesc").textContent = "正在通过 WebRTC ICE 候选收集本机暴露的网络信息。";
+    }
+
+    function parseCandidate(line) {
+      const parts = String(line || "").trim().split(/\s+/);
+      const typIndex = parts.indexOf("typ");
+      const address = parts[4] || "";
+      const port = parts[5] || "";
+      const type = typIndex >= 0 ? parts[typIndex + 1] || "unknown" : "unknown";
+      return { address, port, type, raw: line };
+    }
+
+    function isPrivateAddress(address) {
+      const value = String(address || "").toLowerCase();
+      return /^10\./.test(value) || /^192\.168\./.test(value) || /^172\.(1[6-9]|2\d|3[0-1])\./.test(value) || /^169\.254\./.test(value) || /^fc/.test(value) || /^fd/.test(value) || /^fe80/.test(value);
+    }
+
+    function isPublicIPv4(address) {
+      const value = String(address || "");
+      if (!/^(\d{1,3}\.){3}\d{1,3}$/.test(value)) return false;
+      if (isPrivateAddress(value)) return false;
+      return value.split(".").every((part) => Number(part) >= 0 && Number(part) <= 255);
+    }
+
+    function classifyWebRTCCandidates(lines) {
+      const items = [...new Map(lines.map((line) => [line, parseCandidate(line)])).values()].filter((item) => item.address);
+      const mdns = items.filter((item) => item.address.endsWith(".local"));
+      const privateIps = items.filter((item) => isPrivateAddress(item.address));
+      const publicIps = items.filter((item) => isPublicIPv4(item.address));
+      const currentIp = currentRegionData && currentRegionData.ip ? currentRegionData.ip : "";
+      const extraPublic = publicIps.filter((item) => item.address !== currentIp);
+
+      let leak = "未发现明显泄露";
+      if (privateIps.length) leak = "发现本地 IP 地址";
+      else if (extraPublic.length) leak = "发现额外公网 IP";
+      else if (publicIps.length) leak = "仅发现当前出口公网 IP";
+      else if (mdns.length) leak = "发现 mDNS 本地标识";
+      else if (!items.length) leak = "未发现候选地址";
+
+      return { items, mdns, privateIps, publicIps, extraPublic, leak };
+    }
+
+    async function collectWebRTCCandidates() {
+      const RTCPeer = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+      if (!RTCPeer) throw new Error("unsupported");
+
+      const pc = new RTCPeer({ iceServers: [{ urls: "stun:stun.l.google.com:19302" }] });
+      const lines = [];
+      pc.createDataChannel("geoping");
+
+      pc.onicecandidate = (event) => {
+        if (event.candidate && event.candidate.candidate) lines.push(event.candidate.candidate);
+      };
+
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+
+      await new Promise((resolve) => {
+        const timer = setTimeout(resolve, 5200);
+        pc.onicegatheringstatechange = () => {
+          if (pc.iceGatheringState === "complete") {
+            clearTimeout(timer);
+            resolve();
+          }
+        };
+      });
+
+      if (pc.localDescription && pc.localDescription.sdp) {
+        pc.localDescription.sdp.split("\n").forEach((line) => {
+          const trimmed = line.trim();
+          if (trimmed.startsWith("a=candidate:")) lines.push(trimmed.replace(/^a=/, ""));
+        });
+      }
+
+      pc.close();
+      return [...new Set(lines)];
+    }
+
+    async function runWebRTCCheck() {
+      const btn = $("webrtcBtn");
+      btn.disabled = true;
+      btn.textContent = "检测中...";
+      setWebRTCLoading();
+
+      try {
+        const lines = await collectWebRTCCandidates();
+        const result = classifyWebRTCCandidates(lines);
+        $("webrtcStatus").textContent = "已启用";
+        $("webrtcCount").textContent = `${result.items.length}`;
+        $("webrtcLeak").textContent = result.leak;
+        $("webrtcCandidates").textContent = result.items.length ? result.items.map((item) => `${item.type} · ${item.address}${item.port ? ":" + item.port : ""}`).join("\n") : "未发现候选地址";
+        $("webrtcDesc").textContent = "检测完成。mDNS 标识通常表示浏览器隐藏了真实本地 IP；本地 IP 或额外公网 IP 更需要注意。";
+      } catch (error) {
+        $("webrtcStatus").textContent = error.message === "unsupported" ? "不支持" : "检测失败";
+        $("webrtcCount").textContent = "--";
+        $("webrtcLeak").textContent = error.message === "unsupported" ? "当前浏览器不支持 WebRTC 检测" : "无法完成检测";
+        $("webrtcCandidates").textContent = EMPTY;
+        $("webrtcDesc").textContent = "WebRTC 检测不可用，可能是浏览器不支持、权限策略限制，或网络策略拦截。";
+      }
+
+      btn.disabled = false;
+      btn.textContent = "重新检测 WebRTC";
     }
 
     async function detectAll() {
